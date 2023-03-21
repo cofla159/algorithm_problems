@@ -19,11 +19,10 @@ for x in range(n):
     visited[x] = True
     while stack:
         now = stack.pop()
-        if now != x and a[now] == '1':
-            cnt += 1
-            continue
         for i in graph[now]:
-            if not visited[i]:
+            if not visited[i] and a[now] == '1':
+                cnt += 1
+            elif not visited[i]:
                 stack.append(i)
                 visited[i] = True
 
