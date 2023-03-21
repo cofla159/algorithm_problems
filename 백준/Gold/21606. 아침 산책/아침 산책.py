@@ -11,19 +11,25 @@ for i in range(n-1):
     graph[v].append(u)
 
 cnt = 0
-for x in range(n):
-    if a[x] == '0':
-        continue
-    stack = [x]
-    visited = [False]*n
-    visited[x] = True
-    while stack:
-        now = stack.pop()
-        for i in graph[now]:
-            if not visited[i] and a[now] == '1':
-                cnt += 1
-            elif not visited[i]:
-                stack.append(i)
-                visited[i] = True
+indoor_num = a.count('1')
+if indoor_num <= 1:
+    print(0)
+elif indoor_num == 2:
+    print(2)
+else:
+    for x in range(n):
+        if a[x] == '0':
+            continue
+        stack = [x]
+        visited = [False]*n
+        visited[x] = True
+        while stack:
+            now = stack.pop()
+            for i in graph[now]:
+                if not visited[i] and a[i] == '1':
+                    cnt += 1
+                elif not visited[i]:
+                    stack.append(i)
+                    visited[i] = True
 
 print(cnt)
