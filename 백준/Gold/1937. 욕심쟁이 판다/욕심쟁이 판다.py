@@ -14,11 +14,10 @@ memo = [[None]*n for _ in range(n)]
 def dfs(x, y):
     if memo[x][y] != None:
         return memo[x][y]
-    memo[x][y] = 0
+    memo[x][y] = 1
     for i, j in directions:
         if 0 <= x+i <= n-1 and 0 <= y+j <= n-1 and trees[x][y] < trees[x+i][y+j]:
-            memo[x][y] = max(memo[x][y], dfs(x+i, y+j))
-    memo[x][y] +=1
+            memo[x][y] = max(memo[x][y], dfs(x+i, y+j)+1)
     return memo[x][y]
 
 
