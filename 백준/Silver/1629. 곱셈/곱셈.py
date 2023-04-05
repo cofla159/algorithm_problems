@@ -1,21 +1,22 @@
 from sys import stdin
+import sys
+sys.setrecursionlimit(10**8)
 
-a, b, c = list(map(int, stdin.readline().split()))
+a, b, c = map(int, stdin.readline().split())
+answer = 1
+# memo = {}
 
-numbers = {}
 
-
-def involution(a, b, c):
-    if b == 0:
-        numbers[0] = 1
-        return 1
-    result = numbers.get(b//2)
-    if result:
-        return result*result % c if b % 2 == 0 else result*result*a % c
+def pow_num(a, b, c):
+    if b == 1:
+        return a % c
+    if b == 2:
+        return a**2 % c
     else:
-        result = involution(a, b//2, c)
-        numbers[b//2] = result
-        return result*result % c if b % 2 == 0 else result*result*a % c
+        if b % 2 == 0:
+            return pow_num(a, b//2, c)**2 % c
+        else:
+            return (pow_num(a, b//2, c)**2*a) % c
 
 
-print(involution(a, b, c))
+print(pow_num(a, b, c))
