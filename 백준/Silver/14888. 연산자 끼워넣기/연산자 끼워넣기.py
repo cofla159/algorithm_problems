@@ -1,60 +1,59 @@
 n = int(input())
-arr = list(map(int, input().split()))
-pl, mi, mul, div = list(map(int, input().split()))
-
+A = list(map(int, input().split()))
+pl,mi,mul,di = list(map(int, input().split()))
 operators = []
 for _ in range(pl):
-    operators.append('pl')
+  operators.append("+")
 for _ in range(mi):
-    operators.append('mi')
+  operators.append("-")
 for _ in range(mul):
-    operators.append('mul')
-for _ in range(div):
-    operators.append('div')
+  operators.append("*")   
+for _ in range(di):
+  operators.append("/")
 
-memo = {}
+maxValue = -10**10
+minValue = 10**10
+dp={}
 
+def reflection(used, operators, value):
+  global maxValue, minValue
+#   print("refle called",used,operators,value)
+  if len(operators) == 0:
+    # print(value,maxValue, minValue)
+    maxValue = max(maxValue, value)
+    minValue = min(minValue, value)
+    # print(value,maxValue, minValue)
+    return
+  for i,op in enumerate(operators):
+    if op == "+" and not used+"+" in dp:
+      newValue = value + A[n-len(operators)]
+      dp[used+"+"] = newValue
+      del operators[i]
+      reflection(used+"+", operators, newValue)
+      operators.insert(i, "+")
+    elif op == "-" and not used+"-" in dp:
+      newValue = value - A[n-len(operators)]
+      dp[used+"-"] = newValue
+      del operators[i]
+      reflection(used+"-", operators, newValue)
+      operators.insert(i, "-")
+    elif op == "*" and not used+"*" in dp:
+      newValue = value * A[n-len(operators)]
+    #   print("new:",newValue)
+      dp[used+"*"] = newValue
+      del operators[i]
+      reflection(used+"*", operators, newValue)
+      operators.insert(i, "*")
+    elif op == "/" and not used+"/" in dp:
+      if value < 0:
+        newValue = -(-value // A[n-len(operators)])
+      else:
+        newValue = value // A[n-len(operators)]
+      dp[used+"/"] = newValue
+      del operators[i]
+      reflection(used+"/", operators, newValue)
+      operators.insert(i, "/")
 
-def get_combination(arr, selectNumber):
-    results = []
-    key = tuple(arr)
-    if key in memo:
-        return memo[key]
-    if selectNumber == 1:
-        result = list(map(lambda x: [x], arr))
-        memo[key] = result
-        return result
-    for i in range(len(arr)):
-        rest = arr[:i] + arr[i+1:]
-        permutations = get_combination(rest, selectNumber-1)
-        attached = list(map(lambda x: [arr[i], *x], permutations))
-        results.extend(attached)
-    memo[key] = results
-    return results
-
-
-combi_operators = list(map(list, list(
-    set(map(tuple, get_combination(operators, n-1))))))
-min = 10**8
-max = -10**8
-for combi in combi_operators:
-    sum = arr[0]
-    for i in range(n-1):
-        if combi[i] == 'pl':
-            sum += arr[i+1]
-        elif combi[i] == 'mi':
-            sum -= arr[i+1]
-        elif combi[i] == 'mul':
-            sum *= arr[i+1]
-        else:
-            if sum < 0 and arr[i+1] > 0:
-                sum = -(-sum//arr[i+1])
-            else:
-                sum = sum//arr[i+1]
-    if sum > max:
-        max = sum
-    if sum < min:
-        min = sum
-
-print(max)
-print(min)
+reflection("", operators, A[0])
+print(maxValue)
+print(minValue)
